@@ -1,0 +1,50 @@
+#server:
+#  port: 8771
+#服务的名称
+#spring:
+#  application:
+#    name: product-service
+#  zipkin:
+#    base-url: http://47.93.248.247:9411/
+#  sleuth:
+#    sampler:
+#      probability: 1
+#feign:
+#  client:
+#    config:
+#      default:
+#        connectTimeout: 5000
+#        readTimeout: 5000
+#        loggerLevel: basic
+#指定从哪个配置中心读取
+#建议用lable去区分环境，默认是lable是master分支
+#label: test
+#product-service-test
+spring:
+  application:
+    name: product-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver              # mysql驱动包
+    url: jdbc:mysql://localhost:3306/springdemo?useUnicode=true&characterEncoding=utf-8&useSSL=true            # 数据库名称
+    username: root
+    password: 123
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: CONFIG-SERVER
+      profile: test
+#  rabbitmq:
+#    host: 47.93.248.247
+#    port: 5672
+#    username: guest
+#    password: guest
+#暴露全部的监控信息
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+logging:
+  level:
+    org.springframework.cloud.netflix.feign: debug

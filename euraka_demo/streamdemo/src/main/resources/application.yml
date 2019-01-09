@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: streamdemo
+  rabbitmq:
+    host: 47.93.248.247
+    port: 5672
+    username: guest
+    password: guest

@@ -1,0 +1,8 @@
+Spring Cloud Stream（消息驱动）
+Spring Cloud Stream 是一个用来为微服务应用构建消息驱动能力的框架。
+它可以基于Spring Boot 来创建独立的，可用于生产的Spring 应用程序。
+他通过使用Spring Integration来连接消息代理中间件以实现消息事件驱动。
+Spring Cloud Stream 为一些供应商的消息中间件产品提供了个性化的自动化配置实现，引用了发布-订阅、消费组、分区的三个核心概念。目前仅支持RabbitMQ、Kafka
+
+
+@Input注解区分了一个输入channel，通过它接收消息到应用中，使用@Output注解 区分输出channel，消息通过它离开应用

@@ -1,0 +1,224 @@
+简介:讲解常用的微服务框架
+		consumer: 调用方
+		provider: 被调用方
+		一个接口一般都会充当两个角色（不是同时充当）
+		1、dubbo: zookeeper + dubbo + springmvc/springboot
+			官方地址：http://dubbo.apache.org/#!/?lang=zh-cn
+			配套
+				通信方式：rpc
+				注册中心：zookeper/redis
+				配置中心：diamond
+		2、springcloud: 全家桶+轻松嵌入第三方组件(Netflix 奈飞)
+			官网：http://projects.spring.io/spring-cloud/
+			配套
+				通信方式：http restful
+				注册中心：eruka/consul
+				配置中心：config
+				断路器：hystrix
+				网关：zuul
+				分布式追踪系统：sleuth+zipkin
+		学习资料：https://blog.csdn.net/zhangweiwei2020/article/details/78646252
+
+一.关闭检查方法：eureka服务端配置文件加入
+     获取所有商品列表,eureka会转化成xml格式,因为eureka加入jackson-dataformat-xml依赖
+  	server:
+      	enable-self-preservation: false
+      	自我保护模式禁止关闭，默认是开启状态true，自我保护模式,停止的服务依然可以在注册列表中
+    ribbon:Ribbon是Netflix发布的负载均衡器,用在resttmeplate
+    Ribbon分析 LoadBalancerClient
+    分析@LoadBalanced
+    			1）首先从注册中心获取provider的列表
+    			2）通过一定的策略选择其中一个节点
+    			3）再返回给restTemplate调用
+
+    Feign： 伪RPC客户端(本质还是用http)
+    		官方文档: https://cloud.spring.io/spring-cloud-openfeign/
+    		1、使用feign步骤讲解（新旧版本依赖名称不一样）
+    			加入依赖
+    				 <dependency>
+    			        <groupId>org.springframework.cloud</groupId>
+    			        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    			    </dependency>
+    			启动类增加@EnableFeignClients
+    			增加一个接口 并@FeignClient(name="product-service")
+    		2、注意点：
+    			1、路径
+    			2、Http方法必须对应
+    			3、使用requestBody，应该使用@PostMapping
+    			4、多个参数的时候，通过@RequestParam（"id") int id)方式调用
+    			feign 参数调用
+    Feign核心源码解读和服务调用方式ribbon和Feign选择
+    	简介: 讲解Feign核心源码解读和 服务间的调用方式ribbon、feign选择
+    		1、ribbon和feign两个的区别和选择 ，feign使用ribbon的客户端负载均衡策略
+    			选择feign
+    				默认集成了ribbo更加思n
+    				写起来路清晰和方便
+    				采用注解方式进行配置，配置熔断等方式方便
+    		2、超时配置
+    			默认optons readtimeout是60，但是由于hystrix默认是1秒超时
+    			#修改调用超时时间
+    			feign:
+    			  client:
+    			    config:
+    			      default:
+    			        connectTimeout: 2000
+    			        readTimeout: 2000
+    			模拟接口响应慢，线程睡眠新的方式
+    			  try {
+    		            TimeUnit.SECONDS.sleep(1);
+    		        } catch (InterruptedException e) {
+    		            e.printStackTrace();
+    		        }
+
+第五章 互联网架构服务降级熔断 Hystrix 实战
+1、分布式核心知识之熔断、降级讲解
+	简介：系统负载过高，突发流量或者网络等各种异常情况介绍，常用的解决方案
+	1、熔断：
+		保险丝，熔断服务，为了防止整个系统故障，包含子和下游服务
+		下单服务 -》商品服务
+				-》用户服务 （出现异常-》熔断）
+	2、降级：
+		抛弃一些非核心的接口和数据
+		旅行箱的例子：只带核心的物品，抛弃非核心的，等有条件的时候再去携带这些物品
+	3、熔断和降级互相交集
+		相同点：
+			1）从可用性和可靠性触发，为了防止系统崩溃
+			2）最终让用户体验到的是某些功能暂时不能用
+		不同点
+			1）服务熔断一般是下游服务故障导致的，而服务降级一般是从整体系统负荷考虑，由调用方控制
+			2、Netflix开源组件断路器Hystrix介绍
+            	简介：介绍Hystrix基础知识和使用场景
+            	文档地址：
+            		https://github.com/Netflix/Hystrix
+            		https://github.com/Netflix/Hystrix/wiki
+            	1、什么是Hystrix？
+            		1）hystrix对应的中文名字是“豪猪”
+            		2）hystrix	英[hɪst'rɪks] 美[hɪst'rɪks]
+            	2、为什么要用？
+            		在一个分布式系统里，一个服务依赖多个服务，可能存在某个服务调用失败，
+            		比如超时、异常等，如何能够保证在一个依赖出问题的情况下，不会导致整体服务失败，
+            		通过Hystrix就可以解决
+
+            		http://cloud.spring.io/spring-cloud-netflix/single/spring-cloud-netflix.html#_circuit_breaker_hystrix_clients
+            	3、提供了熔断、隔离、Fallback、cache、监控等功能
+
+            	4、熔断后怎么处理？
+            		出现错误之后可以 fallback 错误的处理信息
+            		兜底数据
+
+5、熔断降级服务异常报警通知实战
+	简介：完善服务熔断处理，报警机制完善
+	1、加入redis依赖
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+    2、配置redis链接信息
+      redis:
+	    database: 0
+	    host: 127.0.0.1
+	    port: 6379
+	    timeout: 2000
+	3、使用
+        //监控报警
+        String saveOrderKye = "save-order";
+        String sendValue = redisTemplate.opsForValue().get(saveOrderKye);
+        final String ip = request.getRemoteAddr();
+        new Thread( ()->{
+            if (StringUtils.isBlank(sendValue)) {
+                System.out.println("紧急短信，用户下单失败，请离开查找原因,ip地址是="+ip);
+                //发送一个http请求，调用短信服务 TODO
+                redisTemplate.opsForValue().set(saveOrderKye, "save-order-fail", 20, TimeUnit.SECONDS);
+            }else{
+                System.out.println("已经发送过短信，20秒内不重复发送");
+            }
+        }).start();
+        6、高级篇幅之深入源码剖析Hystrix降级策略和调整
+        	简介：源码分析Hystrix降级策略和调整
+        	1、查看默认讲解策略 HystrixCommandProperties
+        		1）execution.isolation.strategy   隔离策略
+        			THREAD 线程池隔离 （默认）
+        			SEMAPHORE 信号量
+        				信号量适用于接口并发量高的情况，如每秒数千次调用的情况，导致的线程开销过高，通常只适用于非网络调用，执行速度快
+        		2）execution.isolation.thread.timeoutInMilliseconds  超时时间
+        			默认 1000毫秒
+        		3）execution.timeout.enabled 是否开启超时限制 （一定不要禁用）
+        		4）execution.isolation.semaphore.maxConcurrentRequests 隔离策略为 信号量的时候，如果达到最大并发数时，后续请求会被拒绝，默认是10
+        	官方文档:
+        		https://github.com/Netflix/Hystrix/wiki/Configuration#execution.isolation.strategy
+
+        	2、调整策略
+        		超时时间调整
+        	hystrix:
+        	  command:
+        	    default:
+        	      execution:
+        	        isolation:
+        	          thread:
+        	            timeoutInMilliseconds: 4000
+	补充： 修改maven仓库地址，局部项目
+	pom.xml中修改
+	<repositories>
+        <repository>
+            <id>nexus-aliyun</id>
+            <name>Nexus aliyun</name>
+            <layout>default</layout>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    Netflix zuul：Zuul是一种提供动态路由、监视、弹性、安全性等功能的边缘服务。Zuul是Netflix出品的一个基于JVM路由和服务端的负载均衡器。
+    减少客户端与服务端的直接调用，
+    简介：讲解Zuul网关原理和过滤器生命周期，
+
+    	1、路由名称定义问题
+    		路由映射重复覆盖问题
+
+    	2、Http请求头过滤问题
+    	token:123456789
+         cookie:null,
+         原因："Cookie", "Set-Cookie", "Authorization"  sensitiveHeaders信息过滤
+
+    	3、过滤器执行顺序问题 ，过滤器的order值越小，越先执行
+
+
+    	4、共享RequestContext，上下文对象
+    	5、高级篇幅之高并发情况下接口限流特技
+        	简介：谷歌guava框架介绍，网关限流使用
+
+        	1、nginx层限流
+
+        	2、网关层限流
+
+        6、Zuul微服务网关集群搭建
+        	简介：微服务网关Zull集群搭建
+
+        	1、nginx+lvs+keepalive
+        	https://www.cnblogs.com/liuyisai/p/5990645.html
+
+        第七章 分布式链路追踪系统Sleuth和ZipKin实战，APM工具Application Performance Management
+        	1、微服务下的链路追踪讲解和重要性
+        		简介：讲解什么是分布式链路追踪系统，及使用好处
+        	2、SpringCloud的链路追踪组件Sleuth实战
+        		简介：讲解分布式链路追踪组件Sleuth实战
+
+        docker stop a4937bb1e72c
+        docker run -d -p 9411:9411 openzipkin/zipkin
+
+        默认输出到内存中
+  2、Linux云服务器Centos7安装Docker实战
+                		简介：讲解阿里云ECS服务安装Docker实战
+                		Linux Standard Base的缩写，lsb_release命令用来显示LSB和特定版本的相关信息
+                		命令： lsb_release -a
+
+                		阿里云安装手册：
+                		https://help.aliyun.com/document_detail/51853.html?spm=a2c4g.11186623.6.820.RaToNY
+
+                		常见问题：
+                		https://blog.csdn.net/daluguishou/article/details/52080250

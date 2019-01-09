@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/ffb_test/springcloud_config
+          username: fangfubin2014@163.com
+          password: fangfubin0
+          timeout: 10
+          default-label: master
+          basedir: D:\workspace-idea\cloud\basedir\
+server:
+  port: 9100
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+#label: master

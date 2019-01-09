@@ -1,0 +1,20 @@
+https://www.cnblogs.com/hellxz/p/9396282.html
+
+常用docker命令
+1.docker启动的容器列表 docker ps，docker image
+2.启动、停止、重启某个docker 容器
+docker start myrabbitmq
+docker stop myrabbitmq
+docker restart myrabbitmq
+3.查看指定容器的日志记录
+docker logs -f myrabbitmq
+4.删除容器
+docker rm myrabbitmq
+5.
+docker search rabbitmq:management
+docker pull rabbitmq:management
+docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
+docker run -d -p 9411:9411  openzipkin/zipkin
+1.我们通过使用@EnableBinding(Sink.class)开启了Sink的binding(绑定)，这样做会向框架发出信号，
+以启动与消息传递中间件的绑定，并自动创建绑定到Sink.INPUT通道的目标（即queue，topic和其他）。
+2.

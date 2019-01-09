@@ -1,0 +1,33 @@
+下单流程
+order-service
+1.调用OrderController   /order/create  OrderForm
+2.调用ProductOrderService 转成OrderDTO
+  1)保存 OrderDetail
+  2)调用product-service:减库存feign方法decreaseStockInputList
+  3）订单入库：保存OrderMaster
+3.返回成功信息。
+
+product-service
+1.减库存feignClient
+2.ProductInfo修改库存数量
+3.发送mq消息 ProductInfoOutput
+
+order-service
+1.@RabbitListener ProductReceiver监听类
+  1）log.info打印消息，网redis保存信息.
+
+
+权限校验：
+user：下单前买家必须要登录 /login/buyer?openid=abc   设置cookie，cookie: openid=abc
+       卖家确认订单前必须登录 /login/seller?openid=xyz  设置cookie，cookie:token=uuid    reids : token_uuid=xyz
+
+gateway（拦截order）做权限校验:买家 查看cookie中openid是否存在,
+                    卖家查看cookie中token是否存在，取得uuid并且判断redis中是否存在  token_uuid
+openid和token都要保存到cookie里面，设置过期时间
+
+localhost:9000/user/login/seller?openid=xyz
+localhost:9000/user/login/buyer?openid=abc
+
+localhost:9000/order/order/create
+localhost:9000/order/order/finish?orderId=xxxxxxxx
+
