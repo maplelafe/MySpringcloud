@@ -1,0 +1,42 @@
+#server:
+#  port: 8781
+#指定注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+#服务的名称
+spring:
+  application:
+    name: order-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root123
+    url: jdbc:mysql://127.0.0.1:3306/springdemo?characterEncoding=utf-8&useSSL=false
+#指定从哪个配置中心读取
+  cloud:
+    config:
+      discovery:
+        service-id: CONFIG-SERVER
+        enabled: true
+      profile: test
+    stream:
+      bindings:
+        myMessage:
+          group: order
+          contentType: application/json
+#  zipkin:
+#    base-url: http://47.93.248.247:9411/
+#  sleuth:
+#    sampler:
+#      probability: 1
+logging:
+  level:
+    org.springframework.cloud.openfeign: debug
+    org.springframework.cloud.bus: debug
+#http://localhost:8781/hystrix/
+#management:
+#  server:
+#    servlet:
+#      context-path: /
