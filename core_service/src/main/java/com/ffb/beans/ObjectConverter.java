@@ -18,15 +18,7 @@
  */
 package com.ffb.beans;
 
-/**
- * Class Name: ObjectConverter.
- * 
- * @author wenzc
- * @param <F>
- *            the generic type
- * @param <T>
- *            the generic type
- */
+
 public interface ObjectConverter<F, T> {
 
     /**

@@ -32,14 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * <p>Project: framework-core</p>
- * <p>Function: The Class ConverterUtil.</p>
- * <p>Description: </p>
- * <p>Company: 税友软件集团股份有限公司</p>
- * 
- * @author wenzc
- */
 @SuppressWarnings("rawtypes")
 public final class ConverterUtil {
 

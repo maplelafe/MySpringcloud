@@ -10,14 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * <p>Project: framework-core</p>
- * <p>Function: The Class EnumHelper.</p>
- * <p>Description: </p>
- * <p>Company: 税友软件集团股份有限公司</p>
- * 
- * @author wenzc
- */
+
 @SuppressWarnings("serial")
 public final class EnumHelper implements Serializable {
 

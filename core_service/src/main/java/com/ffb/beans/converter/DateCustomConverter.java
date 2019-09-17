@@ -5,15 +5,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
-/**
- * <p>Project: framework-core</p>
- * <p>Function: The Class DateCustomConverter.</p>
- * <p>Description: </p>
- * <p>Company: 税友软件集团股份有限公司</p>
- * 
- * @author sbf-dev
- * @version 2.0
- */
 public class DateCustomConverter extends DateTimeConverter {
 
     /**

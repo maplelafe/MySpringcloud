@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 
 /**
  * 将String转换成BigDecamall.
- * 
- * @author gong
  */
 public class BigDicimalConverter extends NumberConverter {
 

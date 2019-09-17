@@ -16,8 +16,7 @@ import java.util.Map;
 /**
  * Enhance {@link BeanCopier} to allow customized {@link Converter} to visit
  * field level information via {@code context} param.
- * 
- * @author wenzc
+ *
  * 
  */
 public abstract class TypeAwareBeanCopier extends BeanCopier {
