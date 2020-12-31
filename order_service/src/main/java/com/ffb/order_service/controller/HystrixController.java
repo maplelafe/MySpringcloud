@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 
 /**
+ * 断路器，调用者无法访问被调用方，使用调用方的容错方法
  * Created by ffb
  * 2018-03-18 20:23
  */

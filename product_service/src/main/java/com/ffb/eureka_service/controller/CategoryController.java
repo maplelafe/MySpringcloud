@@ -29,6 +29,7 @@ public class CategoryController {
     public void batchSave(@RequestBody List<ProductCategory> List){
         for (ProductCategory one:List) {
             categoryService.insert(one);
+
         }
     }
 

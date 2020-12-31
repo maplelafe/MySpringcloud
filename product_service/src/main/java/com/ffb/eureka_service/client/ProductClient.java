@@ -30,7 +30,6 @@ public interface ProductClient {
 
         @Override
         public List<ProductInfoOutput> listForOrder(List<String> productIdList) {
-
             System.out.println("fallback:listForOrder");
             return null;
         }
